@@ -13,6 +13,10 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 RUN npm install --production
+
+# Use Fly.io port
 ENV PORT 8080
 EXPOSE 8080
+
+# Start next on dynamic port
 CMD ["sh", "-c", "npm start -- -p $PORT"]
