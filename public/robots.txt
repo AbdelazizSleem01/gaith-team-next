@@ -1,0 +1,23 @@
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /admin/
+Disallow: /_next/
+Disallow: /private/
+Disallow: /auth/
+
+# Block access to sensitive areas
+Disallow: /quiz/*/results
+Disallow: /user/
+Disallow: /profile/
+
+# Allow access to main content
+Allow: /quizzes
+Allow: /grade/
+Allow: /quiz/
+
+# Sitemap
+Sitemap: https://www.elbash-mo3alem.com/sitemap.xml
+
+# Crawl delay (optional - helps reduce server load)
+Crawl-delay: 1

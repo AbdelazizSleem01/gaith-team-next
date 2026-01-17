@@ -1,0 +1,43 @@
+.quizCard {
+  animation-delay: inherit;
+}
+
+.quizCard[data-delay="0"] {
+  animation-delay: 0s;
+}
+
+.quizCard[data-delay="1"] {
+  animation-delay: 0.1s;
+}
+
+.quizCard[data-delay="2"] {
+  animation-delay: 0.2s;
+}
+
+.quizCard[data-delay="3"] {
+  animation-delay: 0.3s;
+}
+
+.quizCard[data-delay="4"] {
+  animation-delay: 0.4s;
+}
+
+.quizCard[data-delay="5"] {
+  animation-delay: 0.5s;
+}
+
+.quizCard[data-delay="6"] {
+  animation-delay: 0.6s;
+}
+
+.quizCard[data-delay="7"] {
+  animation-delay: 0.7s;
+}
+
+.quizCard[data-delay="8"] {
+  animation-delay: 0.8s;
+}
+
+.quizCard[data-delay="9"] {
+  animation-delay: 0.9s;
+}

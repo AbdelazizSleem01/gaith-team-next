@@ -1,0 +1,41 @@
+{
+  "name": "GAITH TEAM - الامتحان في جيبك",
+  "short_name": "GAITH TEAM",
+  "description": "منصة GAITH TEAM المتخصصة في اختبارات التمريض الإلكترونية. اختبر نفسك في جميع فروع التمريض مع نظام أمان متقدم وتجربة تفاعلية مميزة.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4f46e5",
+  "orientation": "portrait-primary",
+  "categories": ["education", "productivity", "health", "Nurrsing", "medical", "healthcarentertainment"],
+  "lang": "ar",
+  "dir": "rtl",
+  "icons": [
+    {
+      "src": "/logo.webp",
+      "sizes": "192x192",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo.webp",
+      "sizes": "512x512",
+      "type": "image/webp",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshot-mobile.png",
+      "sizes": "390x844",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    }
+  ]
+}
