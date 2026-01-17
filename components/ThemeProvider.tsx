@@ -14,12 +14,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children, initialTheme }: { children: ReactNode; initialTheme?: Theme }) {
   const [theme, setThemeState] = useState<Theme>(() => {
-    if (initialTheme) return initialTheme;
-    if (typeof window !== 'undefined') {
-      const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-      return prefersDark ? "dark" : "light";
-    }
-    return "dark";
+    return initialTheme || "dark";
   });
 
   useEffect(() => {

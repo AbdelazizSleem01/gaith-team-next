@@ -78,7 +78,7 @@ export default async function RootLayout({
     | undefined;
 
   return (
-    <html lang="ar" dir="rtl" suppressHydrationWarning>
+    <html lang="ar" dir="rtl" className="dark" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </head>
@@ -86,7 +86,7 @@ export default async function RootLayout({
         className={`${cairo.variable} font-sans antialiased`}
         suppressHydrationWarning
       >
-        <ThemeProvider initialTheme={savedTheme}>
+        <ThemeProvider initialTheme={savedTheme || "dark"}>
           <Navbar />
           {children}
           <Footer />
