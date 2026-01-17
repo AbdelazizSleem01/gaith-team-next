@@ -13,7 +13,6 @@ export async function GET(request: NextRequest) {
     const limit = searchParams.get('limit');
     const page = searchParams.get('page') || '1';
 
-    // If no filters, return optimized home data
     if (!grade && !category && !search) {
       const aggregationPipeline = [
         {
@@ -52,7 +51,6 @@ export async function GET(request: NextRequest) {
       const result = await Quiz.aggregate(aggregationPipeline);
       const data = result[0] || { totalQuizzes: 0, totalQuestions: 0, grades: [], recentQuizzes: [] };
 
-      // Sort grades
       const gradeOrder = {
         "الفرقة الأولى": 1,
         "الفرقة الثانية": 2,
@@ -81,7 +79,6 @@ export async function GET(request: NextRequest) {
       });
     }
 
-    // For filtered requests
     const query: Record<string, unknown> = {};
 
     if (grade && grade !== 'all') {
@@ -104,11 +101,22 @@ export async function GET(request: NextRequest) {
     const limitNum = limit ? parseInt(limit) : 10;
     const skip = (pageNum - 1) * limitNum;
 
-    const quizzes = await Quiz.find(query)
-      .select('-questions') // Exclude questions for performance
-      .sort({ created: -1 })
-      .skip(skip)
-      .limit(limitNum);
+    const quizzes = await Quiz.aggregate([
+      { $match: query },
+      {
+        $addFields: {
+          questionCount: { $size: '$questions' }
+        }
+      },
+      { $sort: { created: -1 } },
+      { $skip: skip },
+      { $limit: limitNum },
+      {
+        $project: {
+          questions: 0 
+        }
+      }
+    ]);
 
     const total = await Quiz.countDocuments(query);
 

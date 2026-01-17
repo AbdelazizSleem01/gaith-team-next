@@ -28,7 +28,8 @@ interface Quiz {
   grade: string;
   category: string;
   time: number;
-  questions: IQuestion[];
+  questions?: IQuestion[]; // Optional since excluded in API
+  questionCount?: number;
   created: Date;
   updated: Date;
 }
@@ -85,7 +86,7 @@ export default function GradePageClient() {
         setQuizzes(data.data);
 
         const totalQuestions = data.data.reduce(
-          (sum: number, quiz: Quiz) => sum + quiz.questions.length,
+          (sum: number, quiz: Quiz) => sum + (quiz.questionCount || 0),
           0
         );
         const uniqueCategories = new Set(
@@ -410,7 +411,7 @@ export default function GradePageClient() {
                       >
                         <span className="flex items-center gap-1">
                           <FaQuestionCircle />
-                          {quiz.questions.length} سؤال
+                          {quiz.questionCount || 0} سؤال
                         </span>
                         <span className="flex items-center gap-1">
                           <FaClock />

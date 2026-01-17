@@ -8,7 +8,6 @@ import {
   FaPlus,
   FaEdit,
   FaTrash,
-  FaEye,
   FaSearch,
   FaClock,
   FaQuestionCircle,
@@ -20,6 +19,8 @@ import {
   FaSignOutAlt,
   FaCog,
   FaBookOpen,
+  FaEye,
+  FaEyeSlash,
 } from "react-icons/fa";
 import Swal from "sweetalert2";
 
@@ -35,7 +36,8 @@ interface Quiz {
   title: string;
   description: string;
   time: number;
-  questions: IQuestion[];
+  questions?: IQuestion[]; // Optional since excluded in API
+  questionCount?: number;
   created: string;
   grade: string;
   category: string;
@@ -59,6 +61,7 @@ export default function AdminPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [showPasswordChange, setShowPasswordChange] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -308,40 +311,68 @@ export default function AdminPage() {
 
   if (!isLoggedIn) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-3xl shadow-xl p-8 max-w-md w-full transform transition-all duration-300 hover:scale-[1.02]">
+      <div className={`min-h-screen flex items-center justify-center p-4 ${
+        theme === "dark"
+          ? "bg-linear-to-b from-gray-900/50 to-gray-800/50"
+          : "bg-linear-to-br from-blue-50 to-indigo-50"
+      }`}>
+        <div className={`rounded-3xl shadow-xl p-8 max-w-md w-full transform transition-all duration-300 hover:scale-[1.02] ${
+          theme === "dark"
+            ? "bg-white/5 border border-white/10 backdrop-blur-lg"
+            : "bg-white border border-gray-200"
+        }`}>
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-20 h-20 bg-indigo-700 rounded-2xl mb-6 shadow-lg">
               <FaKey className="text-white text-3xl" />
             </div>
-            <h1 className="text-3xl font-bold text-indigo-800 mb-3">
+            <h1 className={`text-3xl font-bold mb-3 ${
+              theme === "dark" ? "text-white" : "text-indigo-800"
+            }`}>
               تسجيل الدخول للإدارة
             </h1>
-            <p className="text-gray-600">
+            <p className={`${
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
+            }`}>
               أدخل كلمة المرور للوصول إلى لوحة التحكم
             </p>
           </div>
 
           <div className="space-y-6">
             <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+              <label className={` text-sm font-semibold mb-3 flex items-center gap-2 ${
+                theme === "dark" ? "text-gray-300" : "text-gray-700"
+              }`}>
                 <FaKey className="text-indigo-600" />
                 كلمة المرور
               </label>
               <div className="relative">
                 <input
-                  type="password"
+                  type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-5 py-4 pr-12 border-2 border-indigo-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-gray-200 transition-all duration-300 bg-gray-50"
+                  className={`w-full px-5 py-4 pr-12 border-2 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-300 ${
+                    theme === "dark"
+                      ? "border-gray-600 text-white placeholder-gray-200 bg-gray-800/50"
+                      : "border-indigo-200 bg-gray-50 text-gray-900 placeholder-gray-500"
+                  }`}
                   placeholder="أدخل كلمة المرور"
                   onKeyPress={(e) => e.key === "Enter" && handleLogin()}
                 />
-                <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                <div className="absolute right-4 top-1/2 transform -translate-y-1/2">
                   <div className="w-6 h-6 bg-indigo-600 rounded-lg flex items-center justify-center">
                     <FaKey className="text-white text-xs" />
                   </div>
                 </div>
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className={`absolute left-4 top-1/2 transform -translate-y-1/2 ${
+                    theme === "dark" ? "text-gray-400 hover:text-gray-300" : "text-gray-500 hover:text-gray-700"
+                  } transition-colors duration-200`}
+                  aria-label={showPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"}
+                >
+                  {showPassword ? <FaEyeSlash className="text-lg" /> : <FaEye className="text-lg" />}
+                </button>
               </div>
             </div>
 
@@ -387,7 +418,7 @@ export default function AdminPage() {
                 </p>
                 <p className="text-3xl font-bold mt-2">
                   {quizzes.reduce(
-                    (sum, quiz) => sum + quiz.questions.length,
+                    (sum, quiz) => sum + (quiz.questionCount || 0),
                     0
                   )}
                 </p>
@@ -549,7 +580,7 @@ export default function AdminPage() {
                             {quiz.title}
                           </h3>
                           <span className="px-3 py-1 bg-indigo-100 text-indigo-600 text-xs font-bold rounded-full">
-                            {quiz.questions.length} أسئلة
+                            {quiz.questionCount || 0} أسئلة
                           </span>
                         </div>
                         {quiz.description && (
@@ -636,7 +667,7 @@ export default function AdminPage() {
               {showPasswordChange ? (
                 <>
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <label className=" text-sm font-semibold  mb-3 flex items-center gap-2">
                       <FaKey className="text-indigo-500" />
                       كلمة المرور الحالية
                     </label>
@@ -644,13 +675,13 @@ export default function AdminPage() {
                       type="password"
                       value={currentPassword}
                       onChange={(e) => setCurrentPassword(e.target.value)}
-                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-300"
+                      className={`w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all duration-300 ${theme === "dark" ? "text-gray-100" : "text-gray-700"}`}
                       placeholder="أدخل كلمة المرور الحالية"
                     />
                   </div>
 
                   <div>
-                    <label className="block text-sm font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <label className=" text-sm font-semibold mb-3 flex items-center gap-2">
                       <FaKey className="text-green-500" />
                       كلمة المرور الجديدة
                     </label>
@@ -673,7 +704,7 @@ export default function AdminPage() {
                     </button>
                     <button
                       onClick={() => setShowPasswordChange(false)}
-                      className="px-6 py-3 border-2 border-gray-300 text-gray-700 rounded-xl hover:bg-gray-50 transition-all duration-300"
+                      className={`px-6 py-3 border-2 border-gray-300  rounded-xl  transition-all duration-300 ${theme === "dark" ? "text-gray-100 " : "text-gray-700"}`}
                     >
                       إلغاء
                     </button>
@@ -724,7 +755,7 @@ export default function AdminPage() {
                         </span>
                         <span className="font-bold text-green-600">
                           {quizzes.reduce(
-                            (sum, quiz) => sum + quiz.questions.length,
+                            (sum, quiz) => sum + (quiz.questionCount || 0),
                             0
                           )}
                         </span>
