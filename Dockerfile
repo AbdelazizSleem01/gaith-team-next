@@ -13,6 +13,6 @@ COPY --from=builder /app/package*.json ./
 COPY --from=builder /app/.next ./.next
 COPY --from=builder /app/public ./public
 RUN npm install --production
-ENV PORT 3000
-EXPOSE 3000
+ENV PORT 8080
+EXPOSE 8080
 CMD ["sh", "-c", "npm start -- -p $PORT"]
